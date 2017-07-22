@@ -125,11 +125,14 @@ $(document).ready(function()
 
 	$(document).on('click','.approve',function()
 	{
+		console.log('hello');
 		var check1=confirm("Are You Sure you really want to approve this guest?");
 		if (check1==true) 
 		{
 		var id= $(this).attr("id");	
 		var approve="approve";
+		console.log(id);
+		console.log(approve);
 		$.ajax(
 		{
 			type: 'POST',
@@ -138,10 +141,13 @@ $(document).ready(function()
 			cache: false,
 			success: function(result)
 			{
+				console.log(result);
 				fetch_guest();
 				guest_transfer();
 			}
 		});
+	}else{
+		console.log("not sure");
 	}
 	});
 

@@ -7,14 +7,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
-	<style type="text/css">
-        .btn:hover
-        {
-            cursor: pointer;
-        }
-        
-    </style>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 	
@@ -22,11 +15,11 @@
 		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<a class="navbar-brand" href="#""><img src="http://localhost/Internship%20RSVP/RSVP_IMAGES/logo.png" width="180" height="45" class="d-inline-block align-top" alt=""></a>
+		<a class="navbar-brand" href="#""><img src="http://localhost/shubham/RSVP_IMAGES/logo.png" width="180" height="45" class="d-inline-block align-top" alt=""></a>
 		<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 			<ul class="navbar-nav">
 				<li class="nav-item active">
-					<a role="button" class="btn btn-outline-warning" href="http://localhost/Internship%20RSVP/index.php" style="font-family: 'Oswald'; font-size: 17px;">
+					<a role="button" class="btn btn-outline-warning" href="http://localhost/shubham/index.php" style="font-family: 'Oswald'; font-size: 17px;">
 						<i class="fa fa-home" aria-hidden="true"></i>&nbsp;HOME<span class="sr-only">(current)</span>
 					</a>
 				</li>
@@ -97,7 +90,7 @@
 			$.ajax(
 			{
 				type: "POST",
-				url: "http://localhost/Internship%20RSVP/ajax.php",
+				url: "http://localhost/shubham/ajax.php",
 				data: dataString,
 				success: function(result)
 				{

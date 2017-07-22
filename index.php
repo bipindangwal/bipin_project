@@ -12,18 +12,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
 
 
-	<style type="text/css">
-		.btn:hover
-		{
-			cursor: pointer;
-		}
-		.images_carousel{
-			width: 900px;
-			height: 500px;
-			position: center;
-		}
-		
-	</style>
+	
 </head>
 
 	<nav class=" navbar fixed-top navbar-toggleable-md navbar-inverse bg-inverse">				
@@ -34,7 +23,11 @@
 		<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 			<ul class="navbar-nav">
 				<li class="nav-item active">
-					<a role="button" class="btn btn-outline-warning" href="guests_control_page.php" style="font-family: 'Oswald'; font-size: 17px;">GUESTS<span class="sr-only">(current)</span>
+					<a role="button" class="btn btn-outline-warning" id="teamnav" href="team.php";>Team<span class="sr-only">(current)</span>
+					</a>
+				</li>&nbsp;
+				<li class="nav-item active">
+					<a role="button" class="btn btn-outline-warning" id="indexnav" href="guests_control_page.php";>GUESTS<span class="sr-only">(current)</span>
 					</a>
 				</li>&nbsp;
 				<li class="nav-item active">

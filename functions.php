@@ -1,22 +1,22 @@
 <?php
-
-	function events()
-	{
 		$servername = "localhost";
 		$username = "root";
 		$password = "";
 		$dbname = "database_for_coloredcow";
-
-	   	$event_name=  @$_POST['event_name'];
-	   	$event_theme= @$_POST['event_theme'];
-	   	$event_date=  @$_POST['event_date'];
-	   	$event_venue= @$_POST['event_venue'];
-
-
 		$conn = new mysqli($servername, $username, $password, $dbname);
+	function events()
+	{
+		global $conn;
+	   	$event_name=$_POST['event_name'];
+	   	$event_theme=$_POST['event_theme'];
+	   	$event_date= $_POST['event_date'];
+	   	$event_venue=$_POST['event_venue'];
+
+
+		
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		}
 
 
@@ -37,20 +37,16 @@
 
 	function guest_details()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
-  
-		$guest_name=    @$_POST['guest_name'];
-		$guest_emailid= @$_POST['guest_emailid'];
-		$phone_number=  @$_POST['phone_number'];
-		$guest_gender=  @$_POST['guest_gender'];
 		
-		$conn = new mysqli($servername, $username, $password, $dbname);
+  		global $conn;
+		$guest_name= $_POST['guest_name'];
+		$guest_emailid= $_POST['guest_emailid'];
+		$phone_number= $_POST['phone_number'];
+		$guest_gender= $_POST['guest_gender'];
+		
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    echo("Connection failed: " . $conn->connect_error);
 		}
 		
 		$k="SELECT guest_emailid, phone_number FROM new_guests WHERE guest_emailid='$guest_emailid' OR phone_number='$phone_number' ";
@@ -62,12 +58,12 @@
 		$n=mysqli_num_rows($resultl);
 		if ($m>0)  
 		{	
-			die("This Person is already in our GUEST LIST.");
+			return("This Person is already in our GUEST LIST.");
 		}
 		
 		if ($n>0) 
 		{
-			die("This person has already REQUESTED for the event");
+			return("This person has already REQUESTED for the event");
 		}	
 		
 		$sql = "INSERT INTO new_guests (guest_name, guest_emailid, phone_number, guest_gender,status)
@@ -86,20 +82,14 @@
 
 	function requests()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
-
-		$request_name=    @$_POST['request_name'];
-		$request_emailid= @$_POST['request_emailid'];
-		$request_gender=  @$_POST['request_gender'];
-		$phonenumber=     @$_POST['phonenumber'];
-
-		$conn = new mysqli($servername, $username, $password, $dbname);
+		global $conn;
+		$request_name= $_POST['request_name'];
+		$request_emailid= $_POST['request_emailid'];
+		$request_gender= $_POST['request_gender'];
+		$phonenumber= $_POST['phonenumber'];
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		}
 
 		$k="SELECT guest_emailid, phone_number FROM new_guests WHERE guest_emailid='$request_emailid' OR phone_number='$phonenumber' ";
@@ -111,12 +101,12 @@
 		$n=mysqli_num_rows($resultl);
 		if ($m>0)  
 		{	
-			die("This Person is already in our GUEST LIST.");
+			return("This Person is already in our GUEST LIST.");
 		}
 		
 		if ($n>0) 
 		{
-			die("This person has already REQUESTED for the event");
+			return("This person has already REQUESTED for the event");
 		}
 
 		$sql = "INSERT INTO new_guests_requests (request_name, request_emailid, phonenumber, request_gender,status)
@@ -135,17 +125,12 @@
 
 	function update_details()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
+		global $conn;
 
-		$your_email= @$_POST['user_email'];
-		
-		$conn = new mysqli($servername, $username, $password, $dbname);
+		$your_email= $_POST['user_email'];
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		}
 		
 		$k="SELECT * FROM new_guests WHERE guest_emailid='$your_email'";
@@ -157,7 +142,7 @@
 		$m=mysqli_num_rows($result1);
 		if ($m>0) 
 		{
-			die("YOU ARE ALREADY CONFIRMED IN OUR GUEST LIST. THANK YOU!!");
+			return("YOU ARE ALREADY CONFIRMED IN OUR GUEST LIST. THANK YOU!!");
 		}
 
 		if ($p>0) 
@@ -165,10 +150,11 @@
 			$row= $result->fetch_assoc();
 			$uniquecode=md5(uniqid(rand()));
 			$encryptuniquecode=base64_encode($uniquecode);
-			
-			echo "<a target='_blank' href='http://localhost/Internship%20RSVP/rsvp_confirmation_page.php/?passkey=$encryptuniquecode'>CLICK TO RSVP</a>";
 			$sql="UPDATE new_guests SET random_token='$uniquecode' WHERE guest_emailid='$your_email'";
-			mysqli_query($conn, $sql);
+			$data2=mysqli_query($conn, $sql);
+			$output='';
+			$output .="<a href='rsvp_confirmation_page.php/?passkey=$encryptuniquecode'>CLICK TO RSVP</a>";
+			echo $output;
 		}
 		else
 		{
@@ -186,7 +172,7 @@
 		$conn=new mysqli($servername, $username,$password,$dbname);
 		if ($conn->connect_error) 
 		{
-			die("Connection failed: " . $conn->connect_error);
+			return("Connection failed: " . $conn->connect_error);
 		}	
 		$id_guest=$_POST['guestid'];	
 		$updatestatus=" UPDATE new_guests
@@ -212,10 +198,10 @@
 		$conn = new mysqli($servername, $username, $password, $dbname);
 		if ($conn->connect_error) 
 		{
-			die("Connection failed: " . $conn->connect_error);
+			return("Connection failed: " . $conn->connect_error);
 		} 
 
-		$sql = "SELECT event_name, event_theme, event_date, event_venue FROM new_event ORDER BY `event_date` asc limit 1";
+		$sql = "SELECT event_name, event_date, event_venue FROM new_event ORDER BY `event_date` asc limit 1";
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0) 
 		{
@@ -235,29 +221,17 @@
 
 	function rsvp()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
+		global $conn;
 		
-		$conn1 = new mysqli($servername, $username, $password, $dbname);
-		if ($conn1->connect_error) 
+		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn1->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		} 
 		$output = ""; 
-		$procedure = "
-						CREATE PROCEDURE selectguest()
-						BEGIN  
-							SELECT * FROM new_guests ORDER BY guestid desc;
-						END;
-						";
-			if(mysqli_query($conn1, "drop PROCEDURE IF EXISTS selectguest"))
-			{
-				if (mysqli_query($conn1,$procedure)) 
+		$query = "SELECT * FROM new_guests ORDER BY guestid desc";
+				if (mysqli_query($conn,$query)) 
 				{
-					$query ="CALL selectguest()";
-					$result1= mysqli_query($conn1,$query);
+					$result1= mysqli_query($conn,$query);
 					$output .='<table class="table table-hover table-striped table-bordered table-responsive">';
 					$output .='<thead>';
 					$output .=	'<tr>';
@@ -305,36 +279,23 @@
 						$output .='</table>';
 						echo $output;
 				}
-			}						
+									
 	}
 
 	function submit_requests()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
-		
-		$conn1 = new mysqli($servername, $username, $password, $dbname);
-		if ($conn1->connect_error) 
+		global $conn;
+		if ($conn->connect_error) 
 		{
-			die("Connection failed: " . $conn1->connect_error);
+			return("Connection failed: " . $conn->connect_error);
 		} 
 		
 		$output = ''; 
-		$procedure = "
-						CREATE PROCEDURE select_requested_guest()
-						BEGIN  
-							SELECT * FROM new_guests_requests ORDER BY status DESC;
-						END;
-					";
-			
-			if(mysqli_query($conn1, "drop PROCEDURE IF EXISTS select_requested_guest"))
-			{
-				if (mysqli_query($conn1,$procedure)) 
+		$query = "SELECT * FROM new_guests_requests ORDER BY status DESC";
+				if (mysqli_query($conn,$query)) 
 				{
 					$query ="CALL select_requested_guest()";
-					$result3= mysqli_query($conn1,$query);
+					$result3= mysqli_query($conn,$query);
 					$output .='
 							<table class="table table-hover table-striped
 							table-bordered table-responsive">
@@ -397,22 +358,18 @@
 								$output .='</tbody>
 										</table>';
 								echo $output;
-							}
+							
 						}						
-					$conn1->close();
+					$conn->close();
 	}
 	
 	function showallevents()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
-		$conn = new mysqli($servername, $username, $password, $dbname);
+	    global $conn;
 		$output='';
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		} 
 
 		$sql = "SELECT * FROM new_event ORDER BY event_date asc";
@@ -437,7 +394,7 @@
 									{
 										$output .='
 												<tr class="table-danger">
-													<th scope="row">'.$y.'</th>	
+													<th scope="row">'.$y++.'</th>	
 													<td width="30%">'.$row["event_name"].'</td>
 													<td width="25%">'.$row["event_date"].'</td>
 													<td width="25%">'.$row["event_venue"].'</td>';
@@ -448,7 +405,6 @@
 													</td>
 												</tr>
 											';
-									$y=$y+1;
 									}
 								}
 								else
@@ -467,19 +423,15 @@
 
 	if(isset($_POST["acton"])=="approve")
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";										   
-		$conn1 = new mysqli($servername, $username, $password, $dbname);
-		if ($conn1->connect_error) 
+		global $conn;
+		if ($conn->connect_error) 
 			{
-			    die("Connection failed: " . $conn1->connect_error);
+			    return("Connection failed: " . $conn->connect_error);
 			}
 
-		$request_id= mysqli_real_escape_string($conn1, $_POST["request_id"]);	
+		$request_id= mysqli_real_escape_string($conn, $_POST["request_id"]);	
 		$result5= "SELECT * FROM new_guests_requests WHERE request_id='$request_id'";
-		$result6= mysqli_query($conn1, $result5);
+		$result6= mysqli_query($conn, $result5);
 		$row= mysqli_fetch_assoc($result6);
 		
 		$name= $row['request_name'];
@@ -487,39 +439,38 @@
 		$phone= $row['phonenumber'];
 		$gender= $row['request_gender'];
 
+		echo $email;
+
 		$result7= "INSERT INTO new_guests(guest_name, guest_emailid, phone_number, guest_gender, status)
 					VALUES('$name', '$email', '$phone', '$gender', 'Confirm')";
-		if(mysqli_query($conn1, $result7)===TRUE)
+		if(mysqli_query($conn, $result7)===TRUE)
 		{
 			echo $name."  REQUEST ACCEPTED";
 			$result8= "DELETE FROM new_guests_requests WHERE request_id='$request_id'";
-			mysqli_query($conn1, $result8);
+			mysqli_query($conn, $result8);
 		}
 		else
 		{
-			echo "Error: " .$result7."<br>". $conn1->error;
+
+			echo "Error: " .$result7."<br>". $conn->error;
 		}
-		$conn1->close();
+		$conn->close();
 	}
 
 	function reject_guest()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";										   
-		$conn1 = new mysqli($servername, $username, $password, $dbname);
-		if ($conn1->connect_error) 
+		global $conn;
+		if ($conn->connect_error) 
 		{
-			die("Connection failed: " . $conn1->connect_error);
+			return("Connection failed: " . $conn->connect_error);
 		}
 		
-		$request_id= mysqli_real_escape_string($conn1, $_POST["request_id"]);	
+		$request_id= mysqli_real_escape_string($conn, $_POST["request_id"]);	
 		$results=" SELECT status FROM new_guests_requests WHERE status='Rejected' AND request_id='$request_id'";
-		$confirm=mysqli_query($conn1, $results);
+		$confirm=mysqli_query($conn, $results);
 		if (mysqli_num_rows($confirm)>0) 
 		{
-			die("ALREADY REJECTED");
+			return("ALREADY REJECTED");
 		}
 		else
 		{
@@ -527,29 +478,24 @@
 						SET status='Rejected' 
 						WHERE request_id='$request_id'";
 			
-			if(mysqli_query($conn1, $result9)===TRUE)
+			if(mysqli_query($conn, $result9)===TRUE)
 			{
 				echo "REJECTED";
 			}	
 			else
 			{
-				echo "Error: " .$result9."<br>". $conn1->error;
+				echo "Error: " .$result9."<br>". $conn->error;
 			}
 		}
-		$conn1->close();
+		$conn->close();
 	}
 
 	function extract_event_data()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
-
-		$conn = new mysqli($servername, $username, $password, $dbname);
+		global $conn;
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		} 
 		$event_id=$_POST["event_id"];
 		$sql = "SELECT * FROM new_event WHERE event_id='$event_id' ";
@@ -569,20 +515,14 @@
 
 	function update_event_data()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
-
+		global $conn;
 	   	$event_name=  @$_POST['update_event_name'];
 	   	$event_date=  @$_POST['update_event_date'];
 	   	$event_venue= @$_POST['update_event_venue'];
 	   	$event_id=    @$_POST["update_event_id"];
-		
-		$conn = new mysqli($servername, $username, $password, $dbname);
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		}
 
 		$sql = "UPDATE new_event
@@ -602,17 +542,11 @@
 
 	function delete_event()
 	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "database_for_coloredcow";
-
+		global $conn;
 		$event_id= @$_POST["update_event_id"];
-		
-		$conn = new mysqli($servername, $username, $password, $dbname);
 		if ($conn->connect_error) 
 		{
-		    die("Connection failed: " . $conn->connect_error);
+		    return("Connection failed: " . $conn->connect_error);
 		}
 
 		$sql = "DELETE FROM new_event

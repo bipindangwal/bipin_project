@@ -1,0 +1,15 @@
+.btn:hover
+		{
+			cursor: pointer;
+		}
+.images_carousel{
+			width: 900px;
+			height: 500px;
+			position: center;
+		}
+#navbtn{
+	    cursor: pointer;
+		font-family: 'Oswald'; 
+		font-size: 17px;
+
+       }
